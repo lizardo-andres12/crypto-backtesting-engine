@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	"cbe.com/internal/respository"
+	"cbe.com/internal/repository"
 	"cbe.com/internal/service"
 	"cbe.com/pkg/logger"
 	"github.com/google/uuid"
@@ -29,7 +29,7 @@ func main() {
 	// TODO: study heap allocation implications for flag vars (String vs StringVar)
 	// Create and parse flags
 	symbol := flag.String("symbol", "", "Trading pair symbol (e.g. BTCUSDT)")
-	limit := flag.Int("limit", 500, "Number of candles to fetch")
+	limit := flag.Uint64("limit", 500, "Number of candles to fetch")
 	flag.Parse()
 
 	if *symbol == "" {
@@ -37,7 +37,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	slog.InfoContext(ctx, "Starting ingestion job", slog.String("symbol", *symbol), slog.Int("limit", *limit))
+	slog.InfoContext(ctx, "Starting ingestion job", slog.String("symbol", *symbol), slog.Uint64("limit", *limit))
 
 	// Initialize Components
 	// TODO: display address of connection, which is determined via config file (slog.String(addr, config.addr)
@@ -55,7 +55,7 @@ func main() {
 	// Run ingestion
 	slog.InfoContext(ctx, "Fetching candlestick data...",
 		slog.String("symbol", *symbol),
-		slog.Int("limit", *limit),
+		slog.Uint64("limit", *limit),
 	)
 	candlestickData, err := ingester.FetchAndParse(ctx, *symbol, *limit)
 	if err != nil {

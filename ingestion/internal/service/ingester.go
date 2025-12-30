@@ -31,7 +31,7 @@ func NewBinanceIngester() *BinanceIngester {
 }
 
 // FetchAndParse downloads candles and converts them to the internal model
-func (b *BinanceIngester) FetchAndParse(ctx context.Context, symbol string, limit int) ([]models.MarketDataModel, error) {
+func (b *BinanceIngester) FetchAndParse(ctx context.Context, symbol string, limit uint64) ([]models.MarketDataModel, error) {
 	url := fmt.Sprintf("%s?symbol=%s&interval=1m&limit=%d", BinanceEndpoint, symbol, limit)
 	
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
