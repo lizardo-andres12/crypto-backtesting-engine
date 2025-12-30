@@ -67,7 +67,7 @@ CREATE TABLE market_data_1m
     high UInt64,
     low UInt64,
     close UInt64,
-    volume UInt64
+    volume Float64
 )
 ENGINE = ReplacingMergeTree()       -- Automatically handles data corrections/duplicates
 PARTITION BY toYYYYMM(timestamp)    -- efficient drops of old data
