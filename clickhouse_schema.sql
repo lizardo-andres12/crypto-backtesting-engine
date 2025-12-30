@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS market_data_1m
     high UInt64,
     low UInt64,
     close UInt64,
-    volume UInt64
+    volume Float64
 )
 ENGINE = ReplacingMergeTree()
 PARTITION BY toYYYYMM(timestamp)
