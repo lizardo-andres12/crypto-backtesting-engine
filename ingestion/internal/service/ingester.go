@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	ScaleFactor = 100_000_000 // 10^8 (Satoshi precision)
-	BinanceEndpoint  = "https://api.binance.com/api/v3/klines"
+	ScaleFactor     = 100_000_000 // 10^8 (Satoshi precision)
+	BinanceEndpoint = "https://api.binance.us/api/v3/klines"
 )
 
 // BinanceIngester handles data fetching and parsing
@@ -33,7 +33,7 @@ func NewBinanceIngester() *BinanceIngester {
 // FetchAndParse downloads candles and converts them to the internal model
 func (b *BinanceIngester) FetchAndParse(ctx context.Context, symbol string, limit uint64) ([]models.MarketDataModel, error) {
 	url := fmt.Sprintf("%s?symbol=%s&interval=1m&limit=%d", BinanceEndpoint, symbol, limit)
-	
+
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
@@ -68,8 +68,10 @@ func parseCandles(symbol string, rawData [][]any) ([]models.MarketDataModel, err
 		}
 
 		tsMs, ok := candle[0].(float64)
-		if !ok { return nil, fmt.Errorf("invalid timestamp format") }
-		
+		if !ok {
+			return nil, fmt.Errorf("invalid timestamp format")
+		}
+
 		openStr, ok1 := candle[1].(string)
 		highStr, ok2 := candle[2].(string)
 		lowStr, ok3 := candle[3].(string)
@@ -81,19 +83,29 @@ func parseCandles(symbol string, rawData [][]any) ([]models.MarketDataModel, err
 		}
 
 		open, err := parsePrice(openStr)
-		if err != nil { return nil, err }
+		if err != nil {
+			return nil, err
+		}
 
 		high, err := parsePrice(highStr)
-		if err != nil { return nil, err }
+		if err != nil {
+			return nil, err
+		}
 
 		low, err := parsePrice(lowStr)
-		if err != nil { return nil, err }
+		if err != nil {
+			return nil, err
+		}
 
 		closePrice, err := parsePrice(closeStr)
-		if err != nil { return nil, err }
+		if err != nil {
+			return nil, err
+		}
 
 		volume, err := strconv.ParseFloat(volStr, 64)
-		if err != nil { return nil, err }
+		if err != nil {
+			return nil, err
+		}
 
 		result = append(result, models.MarketDataModel{
 			Symbol:    symbol,
@@ -116,4 +128,3 @@ func parsePrice(priceStr string) (uint64, error) {
 	scaled := math.Round(valFloat * ScaleFactor)
 	return uint64(scaled), nil
 }
-
