@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	DefaultDBName = "crypto"
+	DefaultDBName   = "crypto"
 	DefaultUsername = "default"
+	DefaultPassword = "default"
 )
 
 // ClickhouseRepository wraps a clichouse connection with I/O methods
@@ -26,7 +27,7 @@ func NewClickhouseRepository(ctx context.Context, addr string) (*ClickhouseRepos
 		Auth: clickhouse.Auth{
 			Database: DefaultDBName,
 			Username: DefaultUsername,
-			Password: "",
+			Password: DefaultPassword,
 		},
 		Compression: &clickhouse.Compression{
 			Method: clickhouse.CompressionLZ4,
@@ -67,4 +68,3 @@ func (r *ClickhouseRepository) BatchInsert(ctx context.Context, data []models.Ma
 
 	return batch.Send()
 }
-
