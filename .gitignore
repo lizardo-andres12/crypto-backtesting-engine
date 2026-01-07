@@ -76,3 +76,4 @@ go.work.sum
 # CUSTOM
 execution/lib/*
 execution/build/*
+*/.cache/*
